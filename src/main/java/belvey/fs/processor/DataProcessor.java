@@ -2,17 +2,10 @@ package belvey.fs.processor;
 
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import javax.ws.rs.core.NewCookie;
-
 import java.util.ResourceBundle;
-import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
 
@@ -26,7 +19,6 @@ import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
-import org.iq80.leveldb.DB;
 
 import belvey.fs.processor.model.DataEntity;
 import belvey.fs.processor.util.DateUtils;
@@ -39,15 +31,14 @@ public class DataProcessor {
 	public static class TokenizerMapper extends Mapper<Object, Text, Text, DataEntity> {
 
 		private Text k1 = new Text();
-		private Text v1 = new Text();
 
 		@Override
 		public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
-			StringTokenizer st = new StringTokenizer(value.toString());
-			DataEntity dn = loaddn(st);
-			k1.set(dn.getName());
-			v1.set(dn.toString());
-			context.write(k1, dn);
+			StringTokenizer st = new StringTokenizer(value.toString(),"\t");
+			DataEntity de = loaddn(st);
+			System.out.println(de.toString());
+			k1.set(de.getName());
+			context.write(k1, de);
 		}
 	}
 	private static DataEntity loaddn(StringTokenizer st) {

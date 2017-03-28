@@ -1,11 +1,16 @@
 package belvey.fs.processor.model;
 
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.Date;
 
+import org.apache.hadoop.io.WritableComparable;
+
 import belvey.fs.processor.util.DateUtils;
 
-public class DataEntity {
+public class DataEntity implements WritableComparable<DataEntity>{
 	private String id;
 	private String startTime;
 	private String endTime;
@@ -44,18 +49,36 @@ public class DataEntity {
 	}
 
 
-	/**
-	 * a(this)小于b时返回值小于0
-	 * @param b
-	 * @return
-	 * @throws ParseException
-	 */
-	public int compareTo(DataEntity b) throws ParseException {
-		Date aStart = DateUtils.getdate(this.getStartTime());
-		Date bStart = DateUtils.getdate(b.getStartTime());
+
+	@Override
+	public String toString() {
+		return id+" "+startTime+" "+endTime+" "+name+" "+age;
+	}
+	@Override
+	public void write(DataOutput out) throws IOException {
+		// TODO Auto-generated method stub
 		
+	}
+	@Override
+	public void readFields(DataInput in) throws IOException {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public int compareTo(DataEntity o) {
+
+		Date aStart;
+		Date bStart;
+		try {
+			aStart = DateUtils.getdate(this.getStartTime());
+			bStart = DateUtils.getdate(o.getStartTime());
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+
 		return aStart.compareTo(bStart);
 	}	
+	
 	
 	
 }
